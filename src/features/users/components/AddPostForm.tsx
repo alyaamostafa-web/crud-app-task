@@ -9,41 +9,36 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 
-type Product = {
+type Post = {
   title: string;
-  description: string;
-  price: number | null;
+  body: string;
 };
 type FormErrors = {
   title?: string;
-  description?: string;
-  price?: string;
+  body?: string;
 };
-const AddProductForm = () => {
+const AddPostForm = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   //State
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [price, setPrice] = useState<number | null>(null);
+  const [body, setBody] = useState<string>("");
+
   // Validation Errors
   const [errors, setErrors] = useState<FormErrors>({
     title: "",
-    description: "",
-    price: "",
+    body: "",
   });
 
-  const addProduct = useMutation({
-    mutationFn: async (product: Product) =>
-      await axiosInstance
-        .post("/products/add", product)
-        .then((res) => res.data),
+  const addPost = useMutation({
+    mutationFn: async (post: Post) =>
+      await axiosInstance.post("/posts/add", post).then((res) => res.data),
     onSuccess: (data) => {
-      console.log("Product added successfully:", data);
+      console.log("Post added successfully:", data);
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["posts"],
       });
-      toast.success("Product added successfully!", {
+      toast.success("post added successfully!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -52,7 +47,7 @@ const AddProductForm = () => {
         draggable: true,
       });
       resetForm();
-      router.push("/");
+      router.push("/posts");
     },
     onError: (error) => {
       console.error("Error adding product:", error);
@@ -68,8 +63,7 @@ const AddProductForm = () => {
   });
   const resetForm = () => {
     setTitle("");
-    setDescription("");
-    setPrice(0);
+    setBody("");
     setErrors({});
   };
   // Validation Function
@@ -81,14 +75,9 @@ const AddProductForm = () => {
       newErrors.title = "Title is required.";
     }
 
-    // Validate Description
-    if (!description.trim()) {
-      newErrors.description = "Description is required.";
-    }
-
-    // Validate Price
-    if (price === null || price === undefined || price <= 0) {
-      newErrors.price = "Price must be greater than 0.";
+    // Validate body
+    if (!body.trim()) {
+      newErrors.body = "Description is required.";
     }
 
     setErrors(newErrors);
@@ -100,7 +89,7 @@ const AddProductForm = () => {
       [field]: "",
     }));
   };
-  const isLoading = addProduct.isPending;
+  const isLoading = addPost.isPending;
   //Handler
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -110,10 +99,9 @@ const AddProductForm = () => {
       return;
     }
 
-    addProduct.mutate({
+    addPost.mutate({
       title,
-      description,
-      price,
+      body,
     });
   };
   return (
@@ -121,7 +109,7 @@ const AddProductForm = () => {
       <Input
         type="text"
         id="title"
-        placeholder="Enter product title"
+        placeholder="Enter post title"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
@@ -130,26 +118,15 @@ const AddProductForm = () => {
       />
       {errors.title && <ErrorMessage message={errors.title} />}
       <Textarea
-        value={description}
-        placeholder="Enter product description"
+        value={body}
+        placeholder="Enter post body"
         onChange={(e) => {
-          setDescription(e.target.value);
-          clearError("description");
+          setBody(e.target.value);
+          clearError("body");
         }}
       />
-      {errors.description && <ErrorMessage message={errors.description} />}
-      <Input
-        type="number"
-        id="price"
-        placeholder="Enter product price"
-        value={price ?? ""}
-        min={0}
-        onChange={(e) => {
-          setPrice(Number(e.target.value));
-          clearError("price");
-        }}
-      />
-      {errors.price && <ErrorMessage message={errors.price} />}
+      {errors.body && <ErrorMessage message={errors.body} />}
+
       <Button
         isLoading={isLoading}
         className="bg-indigo-600 hover:bg-indigo-800 w-full"
@@ -159,4 +136,4 @@ const AddProductForm = () => {
     </form>
   );
 };
-export default AddProductForm;
+export default AddPostForm;

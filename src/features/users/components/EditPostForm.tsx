@@ -4,46 +4,51 @@ import Input from "@/components/ui/input";
 import Textarea from "@/components/ui/Textarea";
 import axiosInstance from "@/config/axios.config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import { useFetchSinglePost } from "./../hooks/useFetchSinglePost";
 
-type Product = {
+type Post = {
   title: string;
-  description: string;
-  price: number | null;
+  body: string;
 };
-type FormErrors = {
-  title?: string;
-  description?: string;
-  price?: string;
-};
-const AddProductForm = () => {
+interface IProps {
+  id: string;
+}
+const EditPostForm = ({ id }: IProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+
   //State
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [price, setPrice] = useState<number | null>(null);
-  // Validation Errors
-  const [errors, setErrors] = useState<FormErrors>({
-    title: "",
-    description: "",
-    price: "",
-  });
+  const [body, setBody] = useState<string>("");
 
-  const addProduct = useMutation({
-    mutationFn: async (product: Product) =>
-      await axiosInstance
-        .post("/products/add", product)
-        .then((res) => res.data),
+  // Validation Errors
+  const [errors, setErrors] = useState<{
+    title?: string;
+    body?: string;
+  }>({});
+
+  const { data, isLoading } = useFetchSinglePost(id);
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title);
+      setBody(data.body);
+    }
+  }, [data]);
+
+  const editPost = useMutation({
+    mutationFn: async (post: Post) =>
+      await axiosInstance.put(`/posts/${id}`, post).then((res) => res.data),
     onSuccess: (data) => {
-      console.log("Product added successfully:", data);
+      console.log("post updated  successfully:", data);
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["posts"],
       });
-      toast.success("Product added successfully!", {
+      toast.success("post updated successfully!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -51,12 +56,11 @@ const AddProductForm = () => {
         pauseOnHover: true,
         draggable: true,
       });
-      resetForm();
-      router.push("/");
+      router.push("/posts");
     },
     onError: (error) => {
-      console.error("Error adding product:", error);
-      toast.error("Failed to add product. Please try again.", {
+      console.error("Error updated  post:", error);
+      toast.error("Failed to update post. Please try again.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -66,15 +70,13 @@ const AddProductForm = () => {
       });
     },
   });
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setPrice(0);
-    setErrors({});
-  };
+
   // Validation Function
   const validateForm = () => {
-    const newErrors: FormErrors = {};
+    const newErrors: {
+      title?: string;
+      body?: string;
+    } = {};
 
     // Validate Title
     if (!title.trim()) {
@@ -82,13 +84,8 @@ const AddProductForm = () => {
     }
 
     // Validate Description
-    if (!description.trim()) {
-      newErrors.description = "Description is required.";
-    }
-
-    // Validate Price
-    if (price === null || price === undefined || price <= 0) {
-      newErrors.price = "Price must be greater than 0.";
+    if (!body.trim()) {
+      newErrors.body = "Body is required.";
     }
 
     setErrors(newErrors);
@@ -100,7 +97,8 @@ const AddProductForm = () => {
       [field]: "",
     }));
   };
-  const isLoading = addProduct.isPending;
+
+  const isEditLoading = editPost.isPending;
   //Handler
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -110,18 +108,19 @@ const AddProductForm = () => {
       return;
     }
 
-    addProduct.mutate({
+    editPost.mutate({
       title,
-      description,
-      price,
+      body,
     });
   };
+
+  if (isLoading) return <p>Loading...</p>;
   return (
     <form className="space-y-3 max-w-md mx-auto" onSubmit={submitHandler}>
       <Input
         type="text"
         id="title"
-        placeholder="Enter product title"
+        placeholder="Enter post title"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
@@ -130,33 +129,22 @@ const AddProductForm = () => {
       />
       {errors.title && <ErrorMessage message={errors.title} />}
       <Textarea
-        value={description}
-        placeholder="Enter product description"
+        value={body}
+        placeholder="Enter post Body"
         onChange={(e) => {
-          setDescription(e.target.value);
-          clearError("description");
+          setBody(e.target.value);
+          clearError("body");
         }}
       />
-      {errors.description && <ErrorMessage message={errors.description} />}
-      <Input
-        type="number"
-        id="price"
-        placeholder="Enter product price"
-        value={price ?? ""}
-        min={0}
-        onChange={(e) => {
-          setPrice(Number(e.target.value));
-          clearError("price");
-        }}
-      />
-      {errors.price && <ErrorMessage message={errors.price} />}
+      {errors.body && <ErrorMessage message={errors.body} />}
+
       <Button
-        isLoading={isLoading}
+        isLoading={isEditLoading}
         className="bg-indigo-600 hover:bg-indigo-800 w-full"
       >
-        {isLoading ? "Loading..." : "Save"}
+        {isEditLoading ? "Loading..." : "Save"}
       </Button>
     </form>
   );
 };
-export default AddProductForm;
+export default EditPostForm;

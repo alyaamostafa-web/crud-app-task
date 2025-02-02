@@ -93,8 +93,6 @@ const EditProductForm = ({ id }: IProps) => {
     // Validate Description
     if (!description.trim()) {
       newErrors.description = "Description is required.";
-    } else if (description.trim().length < 10) {
-      newErrors.description = "Description must be at least 10 characters.";
     }
 
     // Validate Price
@@ -105,7 +103,12 @@ const EditProductForm = ({ id }: IProps) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
-
+  const clearError = (field: keyof typeof errors) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: "",
+    }));
+  };
   const isEditLoading = editProduct.isPending;
   //Handler
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
@@ -131,13 +134,19 @@ const EditProductForm = ({ id }: IProps) => {
         id="title"
         placeholder="Enter product title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => {
+          setTitle(e.target.value);
+          clearError("title");
+        }}
       />
       {errors.title && <ErrorMessage message={errors.title} />}
       <Textarea
         value={description}
         placeholder="Enter product description"
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e) => {
+          setDescription(e.target.value);
+          clearError("description");
+        }}
       />
       {errors.description && <ErrorMessage message={errors.description} />}
       <Input
@@ -145,7 +154,10 @@ const EditProductForm = ({ id }: IProps) => {
         id="price"
         placeholder="Enter product price"
         value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
+        onChange={(e) => {
+          setPrice(Number(e.target.value));
+          clearError("price");
+        }}
       />
       {errors.price && <ErrorMessage message={errors.price} />}
       <Button

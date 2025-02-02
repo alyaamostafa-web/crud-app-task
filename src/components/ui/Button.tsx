@@ -11,7 +11,7 @@ const Button = ({ children, className, isLoading, type, ...rest }: IProps) => {
   return (
     <button
       type={type}
-      className={`${className}  px-3 py-3 font-medium text-white duration-200 rounded-lg`}
+      className={`${className} flex items-center justify-center gap-2  px-3 py-3 font-medium text-white duration-200 rounded-lg`}
       {...rest}
       disabled={isLoading}
     >
