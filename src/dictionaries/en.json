@@ -1,0 +1,48 @@
+{
+  "products": {
+    "title": "Products",
+    "add": "Add New Product",
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "loading": "Loading...",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "form": {
+      "addTitle": "Add New Product",
+      "editTitle": "Edit Product",
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "submit": "Submit",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "posts": {
+    "title": "Posts",
+    "add": "Add New Post",
+    "table": {
+      "name": "Name",
+      "body": "Body",
+      "loading": "Loading...",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "form": {
+      "addTitle": "Add New Post",
+      "editTitle": "Edit Post",
+      "name": "Name",
+      "body": "Body",
+      "submit": "Submit",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "navbar": {
+    "product": "Products",
+    "posts": "Posts"
+  }
+}

@@ -8,7 +8,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ErrorMessage from "@/components/ui/ErrorMessage";
-import { useFetchSinglePost } from "./../hooks/useFetchSinglePost";
+import { useFetchSinglePost } from "../hooks/useFetchSinglePost";
 
 type Post = {
   title: string;

@@ -9,12 +9,12 @@ import { useFetchPosts } from "../hooks/useFetchPosts";
 import PostRow from "./PostRow";
 import { Post } from "../types/post";
 
-const PostsTable = () => {
+const PostsTable = ({ searchTerm }: { searchTerm: string }) => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedPostId, setClickedPostId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useFetchPosts(page);
+  const { data, isLoading, isError } = useFetchPosts(page, searchTerm);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     console.log(selectedItem.selected + 1);
@@ -65,8 +65,14 @@ const PostsTable = () => {
   };
   const isLoadingDelete = deleteMutation.isPending;
 
-  if (isError) return <div>Error loading posts. Please try again later.</div>;
-  if (isLoading) return <div>Loading...</div>;
+  if (isError)
+    return (
+      <div className="text-center py-6 text-lg">
+        Error loading posts. Please try again later.
+      </div>
+    );
+  if (isLoading)
+    return <div className="text-center py-6 text-lg">Loading...</div>;
 
   return (
     <>
@@ -78,7 +84,7 @@ const PostsTable = () => {
                 Title
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                body
+                Body
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                 Actions
@@ -97,18 +103,21 @@ const PostsTable = () => {
                 />
               ))
             ) : (
-              <tr>No Posts yet!</tr>
+              <tr className="text-center p-9 inline-block ">
+                <td>No Products yet!</td>
+              </tr>
             )}
           </tbody>
         </table>
       </div>
-      <div className="border-t border-gray-200 ">
-        <Pagination
-          pageCount={Math.ceil(data.total / 10)}
-          onPageChange={handlePageClick}
-        />
-      </div>
-
+      {data?.posts?.length ? (
+        <div className="border-t border-gray-200 ">
+          <Pagination
+            pageCount={Math.ceil(data.total / 10)}
+            onPageChange={handlePageClick}
+          />
+        </div>
+      ) : null}
       {/* Delete Confirmation Modal */}
       <Modal
         isOpen={isModalOpen}

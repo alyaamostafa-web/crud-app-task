@@ -9,12 +9,12 @@ import { toast } from "react-toastify";
 import Pagination from "@/components/Pagination";
 import { useFetchProducts } from "../hooks/useFetchProducts";
 
-const ProductsTable = () => {
+const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedProductId, setClickedProductId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useFetchProducts(page);
+  const { data, isLoading, isError } = useFetchProducts(page, searchTerm);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     console.log(selectedItem.selected + 1);
@@ -66,8 +66,13 @@ const ProductsTable = () => {
   const isLoadingDelete = deleteMutation.isPending;
 
   if (isError)
-    return <div>Error loading products. Please try again later.</div>;
-  if (isLoading) return <div>Loading...</div>;
+    return (
+      <div className="text-center py-6 text-lg">
+        Error loading products. Please try again later.
+      </div>
+    );
+  if (isLoading)
+    return <div className="text-center py-6 text-lg">Loading...</div>;
 
   return (
     <>
@@ -79,7 +84,7 @@ const ProductsTable = () => {
                 Title
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                description
+                Description
               </th>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                 Price
@@ -101,17 +106,21 @@ const ProductsTable = () => {
                 />
               ))
             ) : (
-              <tr>No Products yet!</tr>
+              <tr className="text-center p-9 inline-block ">
+                <td>No Products yet!</td>
+              </tr>
             )}
           </tbody>
         </table>
       </div>
-      <div className="border-t border-gray-200 ">
-        <Pagination
-          pageCount={Math.ceil(data.total / 10)}
-          onPageChange={handlePageClick}
-        />
-      </div>
+      {data?.products?.length ? (
+        <div className="border-t border-gray-200 ">
+          <Pagination
+            pageCount={Math.ceil(data.total / 10)}
+            onPageChange={handlePageClick}
+          />
+        </div>
+      ) : null}
 
       {/* Delete Confirmation Modal */}
       <Modal

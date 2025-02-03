@@ -1,4 +1,4 @@
-import EditPostForm from "./../../../../features/users/components/EditPostForm";
+import EditPostForm from "../../../../features/posts/components/EditPostForm";
 
 interface IProps {
   params: { id: string };
