@@ -8,6 +8,7 @@ const PostssDisplay = () => {
   const [searchTerm, setSearchTerm] = useState("");
   return (
     <>
+      <h1 className="text-2xl font-bold mb-4 text-center">Posts</h1>
       <div className="my-8 flex justify-between flex-col sm:flex-row gap-4">
         <Input
           type="text"

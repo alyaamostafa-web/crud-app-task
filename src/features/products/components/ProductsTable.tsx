@@ -77,7 +77,7 @@ const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
   return (
     <>
       <div className=" rounded-t-lg">
-        <table className="w-full  divide-y-2  divide-gray-200 bg-white text-sm text-left">
+        <table className="w-full  divide-y-2  divide-gray-200 bg-white text-sm text-left rtl:text-right">
           <thead>
             <tr>
               <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
@@ -107,7 +107,7 @@ const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
               ))
             ) : (
               <tr className="text-center p-9 inline-block ">
-                <td>No Products yet!</td>
+                <td>No Products</td>
               </tr>
             )}
           </tbody>

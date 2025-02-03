@@ -12,6 +12,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 type Post = {
   title: string;
   body: string;
+  userId: number;
 };
 type FormErrors = {
   title?: string;
@@ -33,8 +34,7 @@ const AddPostForm = () => {
   const addPost = useMutation({
     mutationFn: async (post: Post) =>
       await axiosInstance.post("/posts/add", post).then((res) => res.data),
-    onSuccess: (data) => {
-      console.log("Post added successfully:", data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
@@ -50,8 +50,8 @@ const AddPostForm = () => {
       router.push("/posts");
     },
     onError: (error) => {
-      console.error("Error adding product:", error);
-      toast.error("Failed to add product. Please try again.", {
+      console.error("Error adding post:", error);
+      toast.error("Failed to add post. Please try again.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -102,6 +102,7 @@ const AddPostForm = () => {
     addPost.mutate({
       title,
       body,
+      userId: 5, //as it is fake data
     });
   };
   return (

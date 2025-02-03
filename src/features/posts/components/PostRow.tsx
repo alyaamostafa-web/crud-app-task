@@ -18,7 +18,7 @@ const PostRow = ({ post, handleDeleteClick, isLoadingDelete }: IProps) => {
         <td className="whitespace-nowrap px-4 py-2 text-gray-700">
           {post.body.slice(0, 30)}...
         </td>
-        <td className="whitespace-nowrap px-4 py-2 flex space-x-2">
+        <td className="whitespace-nowrap px-4 py-2 flex gap-x-2">
           <Link
             href={`/posts/${post?.id}/edit`}
             className="inline-block rounded bg-yellow-500 px-4 py-2 text-xs font-medium text-white"

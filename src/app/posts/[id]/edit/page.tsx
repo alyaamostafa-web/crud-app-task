@@ -1,7 +1,7 @@
-import EditPostForm from "../../../../features/posts/components/EditPostForm";
+import EditPostForm from "@/features/posts/components/EditPostForm";
 
 interface IProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 const EditPostPage = async ({ params }: IProps) => {
   const { id } = await params;

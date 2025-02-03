@@ -43,8 +43,7 @@ const EditPostForm = ({ id }: IProps) => {
   const editPost = useMutation({
     mutationFn: async (post: Post) =>
       await axiosInstance.put(`/posts/${id}`, post).then((res) => res.data),
-    onSuccess: (data) => {
-      console.log("post updated  successfully:", data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
@@ -58,8 +57,7 @@ const EditPostForm = ({ id }: IProps) => {
       });
       router.push("/posts");
     },
-    onError: (error) => {
-      console.error("Error updated  post:", error);
+    onError: () => {
       toast.error("Failed to update post. Please try again.", {
         position: "top-right",
         autoClose: 3000,

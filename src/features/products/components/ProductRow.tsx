@@ -25,7 +25,7 @@ const ProductRow = ({
         <td className="whitespace-nowrap px-4 py-2 text-gray-700">
           {product.price}
         </td>
-        <td className="whitespace-nowrap px-4 py-2 flex space-x-2">
+        <td className="whitespace-nowrap px-4 py-2 flex gap-x-2">
           <Link
             href={`/products/${product?.id}/edit`}
             className="inline-block rounded bg-yellow-500 px-4 py-2 text-xs font-medium text-white"

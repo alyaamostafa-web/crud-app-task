@@ -1,7 +1,7 @@
 import EditProductForm from "@/features/products/components/EditProductForm";
 
 interface IProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 const EditPrdouctPage = async ({ params }: IProps) => {
   const { id } = await params;
