@@ -49,8 +49,7 @@ const EditProductForm = ({ id }: IProps) => {
       await axiosInstance
         .put(`/products/${id}`, product)
         .then((res) => res.data),
-    onSuccess: (data) => {
-      console.log("Product updated  successfully:", data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
@@ -64,8 +63,7 @@ const EditProductForm = ({ id }: IProps) => {
       });
       router.push("/");
     },
-    onError: (error) => {
-      console.error("Error updated  product:", error);
+    onError: () => {
       toast.error("Failed to update product. Please try again.", {
         position: "top-right",
         autoClose: 3000,

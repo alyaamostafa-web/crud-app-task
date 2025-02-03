@@ -38,8 +38,7 @@ const AddProductForm = () => {
       await axiosInstance
         .post("/products/add", product)
         .then((res) => res.data),
-    onSuccess: (data) => {
-      console.log("Product added successfully:", data);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
@@ -54,8 +53,7 @@ const AddProductForm = () => {
       resetForm();
       router.push("/");
     },
-    onError: (error) => {
-      console.error("Error adding product:", error);
+    onError: () => {
       toast.error("Failed to add product. Please try again.", {
         position: "top-right",
         autoClose: 3000,

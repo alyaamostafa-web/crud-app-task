@@ -17,7 +17,6 @@ const PostsTable = ({ searchTerm }: { searchTerm: string }) => {
   const { data, isLoading, isError } = useFetchPosts(page, searchTerm);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
-    console.log(selectedItem.selected + 1);
     setPage(selectedItem.selected + 1);
   };
 
@@ -37,8 +36,7 @@ const PostsTable = ({ searchTerm }: { searchTerm: string }) => {
         draggable: true,
       });
     },
-    onError: (error) => {
-      console.error("Error deleted  post:", error.message);
+    onError: () => {
       toast.error("Failed to delete post. Please try again.", {
         position: "top-right",
         autoClose: 3000,
@@ -61,7 +59,6 @@ const PostsTable = ({ searchTerm }: { searchTerm: string }) => {
 
   const handleConfirmDelete = () => {
     if (clickedPostId !== null) deleteMutation.mutate(clickedPostId);
-    console.log(clickedPostId);
   };
   const isLoadingDelete = deleteMutation.isPending;
 

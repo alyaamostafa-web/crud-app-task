@@ -49,8 +49,7 @@ const AddPostForm = () => {
       resetForm();
       router.push("/posts");
     },
-    onError: (error) => {
-      console.error("Error adding post:", error);
+    onError: () => {
       toast.error("Failed to add post. Please try again.", {
         position: "top-right",
         autoClose: 3000,
@@ -102,7 +101,7 @@ const AddPostForm = () => {
     addPost.mutate({
       title,
       body,
-      userId: 5, //as it is fake data
+      userId: 5, //as it is fake
     });
   };
   return (

@@ -17,7 +17,6 @@ const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
   const { data, isLoading, isError } = useFetchProducts(page, searchTerm);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
-    console.log(selectedItem.selected + 1);
     setPage(selectedItem.selected + 1);
   };
 
@@ -37,8 +36,7 @@ const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
         draggable: true,
       });
     },
-    onError: (error) => {
-      console.error("Error deleted  product:", error.message);
+    onError: () => {
       toast.error("Failed to delete product. Please try again.", {
         position: "top-right",
         autoClose: 3000,
@@ -61,7 +59,6 @@ const ProductsTable = ({ searchTerm }: { searchTerm: string }) => {
 
   const handleConfirmDelete = () => {
     if (clickedProductId !== null) deleteMutation.mutate(clickedProductId);
-    console.log(clickedProductId);
   };
   const isLoadingDelete = deleteMutation.isPending;
 
